@@ -19,7 +19,7 @@ class Login extends Component {
 
   constructor(props) {
     super();
-    
+
     this.state = {
       isUserOnline: false,
     }
@@ -43,6 +43,7 @@ class Login extends Component {
   }
 
   getUserConnectionStatus = () => {
+    
     NetInfo.isConnected.fetch().then(isUserOnline => {
       this.state.isUserOnline = isUserOnline;
       this.setState(this.state);
