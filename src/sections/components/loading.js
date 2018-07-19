@@ -1,20 +1,14 @@
 import React from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   ActivityIndicator,
-  StatusBar,
 } from 'react-native';
 
 function Loading(props) {
   return (
     <View style={styles.container}>
-      <StatusBar
-        backgroundColor="white"
-        barStyle="dark-content"
-      />
       <Image
         source={require('../../../assets/logo-corona.png')}
         style={styles.logo}

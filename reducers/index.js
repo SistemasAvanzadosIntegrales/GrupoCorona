@@ -1,15 +1,16 @@
 import {
   combineReducers
 } from 'redux';
-
+import auth from './auth'
 import navigation from './navigation';
-import videos from './videos';
-import user from './user';
+import vehicles from './vehicles';
+import catalogs from './catalogs';
 
 const reducer = combineReducers({
-  videos,
+  auth,
   navigation,
-  user,
+  vehicles,
+  catalogs
 })
 
-export default reducer;
+export default reducer

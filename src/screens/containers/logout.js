@@ -3,25 +3,23 @@ import {
   StatusBar,
 } from 'react-native';
 import LoadingLayout from '../../sections/components/loading'
+import { logout } from '../../../actions'
 import { connect } from 'react-redux';
 
 class Logout extends Component {
   
-  componentDidMount() {
-    this.props.navigation.navigate('Login');
-    // this.props.dispatch({
-    //   type: 'REMOVE_USER',
-    // })
-
-    // this.props.navigation.navigate('Loading');
-    // if(this.props.user) {
-    //   this.props.navigation.navigate('App');
-    // } else {
-    //   this.props.navigation.navigate('Login');
-    // }
+  constructor() {
+    super()
   }
   
   render() {
+
+    this.props.logout()
+
+    if (this.props.auth.get('access_token') == '') {
+      this.props.navigation.navigate('Login');
+    }
+    
     return (
       <Fragment>
         <StatusBar
@@ -34,10 +32,16 @@ class Logout extends Component {
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-    user: state.user
+    auth: state.auth
   }
 }
 
-export default connect(mapStateToProps)(Logout)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => dispatch(logout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Logout)

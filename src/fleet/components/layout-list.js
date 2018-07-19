@@ -7,8 +7,8 @@ import {
 
 function LayoutList (props) {
   return (
-    <View style={styles.container}>
-      {props.children}
+    <View style={ styles.container }>
+      { props.children }
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Text,
   TextInput,
@@ -10,14 +10,16 @@ import {
   ScrollView,
   Button,
   TouchableOpacity,
-} from 'react-native';
-import { connect } from 'react-redux';
-import Header from '../../sections/components/headerNoSearch';
+} from 'react-native'
+import { connect } from 'react-redux'
+import { vehicleUpdateFetch } from '../../../actions'
+import Header from '../../sections/components/headerNoSearch'
 
 class Vehicles extends Component {
 
   constructor() {
-    super();
+    super()
+
     this.state = {
       MarcaValue: '',
       ModeloValue: '',
@@ -29,14 +31,17 @@ class Vehicles extends Component {
   }
 
   handleCancel = () => {
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate('Login')
   }
-
+  
   handleSuccess = () => {
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate('Login')
   }
   
   render() {
+
+    console.log(this.props)
+
     return (
       <SafeAreaView>
         <StatusBar
@@ -67,8 +72,7 @@ class Vehicles extends Component {
                 mode='dialog'
               >
                 <Picker.Item label="Seleccione una marca" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
+                { this.props.catalogs.data.map( (value) => <Picker.Item label="{}" value="{}" /> )}
               </Picker>
             </View>
 
@@ -318,4 +322,18 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(null)(Vehicles);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth.toJS(),
+    vehicles: state.vehicles.toJS(),
+    catalogs: state.catalogs.toJS()
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    vehicleUpdateFetch: (auth, props) => { dispatch(vehicleUpdateFetch(auth, props)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Vehicles)

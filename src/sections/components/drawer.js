@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react'
 import {
   View,
   Text,
@@ -7,26 +7,35 @@ import {
   Image,
   StyleSheet
 } from 'react-native'
-import { DrawerItems } from 'react-navigation';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import { DrawerItems } from 'react-navigation'
+import { connect } from 'react-redux'
+import Icon from 'react-native-vector-icons/dist/FontAwesome'
 
-function Drawer(props) {
-  return (
-    <ScrollView>
-      <SafeAreaView>
-        <View style={styles.container}>
-          <View>
-            <Icon style={styles.icon} name="user-circle" size={30} color="#4FD2D5" />
+class Drawer extends Component {
+
+  constructor() {
+    super()
+  }
+
+  render() {
+    return (
+      <ScrollView>
+        <SafeAreaView>
+          <View style={styles.container}>
+            <View>
+              <Icon style={styles.icon} name="user-circle" size={30} color="#4FD2D5" />
+            </View>
+            <View>
+              <Text style={styles.maintitle} >{ this.props.auth.name }</Text>
+              <Text style={styles.secondarytitle} > { this.props.auth.profile } </Text>
+              <Text style={styles.secondarytitle} > { this.props.auth.office_id } </Text>
+            </View>
           </View>
-          <View>
-            <Text style={styles.maintitle} >Roberto Ramírez</Text>
-            <Text style={styles.secondarytitle} >Administrador</Text>
-          </View>
-        </View>
-        <DrawerItems {...props} />
-      </SafeAreaView>
-    </ScrollView>
-  )
+          <DrawerItems {...this.props} />
+        </SafeAreaView>
+      </ScrollView>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -52,4 +61,10 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Drawer
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth.toJS(),
+  }
+}
+
+export default connect(mapStateToProps)(Drawer)

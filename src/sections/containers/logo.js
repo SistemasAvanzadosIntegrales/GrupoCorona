@@ -13,7 +13,7 @@ class Logo extends Component {
   handleClick = () => {
     this.props.dispatch(
       NavigationActions.navigate({
-        routeName: 'Login'
+        routeName: 'Home'
       })
     )
   }
@@ -22,7 +22,7 @@ class Logo extends Component {
     return (
       <TouchableOpacity onPress={this.handleClick} >
         <Image
-          source={require('../../../assets/logosmall.png')}
+          source={require('../../../assets/logo-header.png')}
           style={styles.logo}
         />
       </TouchableOpacity>

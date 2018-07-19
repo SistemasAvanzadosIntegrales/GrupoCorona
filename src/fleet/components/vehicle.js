@@ -11,15 +11,15 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 function Vehicle(props) {
   return (
     <TouchableOpacity
-      onPress={props.onPress}
+      onPress={ props.onPress }
     >
-      <View style={styles.container}>
-        <View style={styles.left}>
-          <Text style={styles.title}>{props.title}</Text>
-          <Text style={styles.subtitle}>{props.rating} | {props.year}</Text>
+      <View style={ styles.container }>
+        <View style={ styles.left }>
+          <Text style={ styles.title }>{ props.model_type.name } { props.brand.name }  </Text>
+          <Text style={ styles.subtitle }>{ props.folio } | { props.plates }</Text>
         </View>
 
-        <View style={styles.right}>
+        <View style={ styles.right }>
           <Icon 
             name="chevron-right" 
             size={20} 

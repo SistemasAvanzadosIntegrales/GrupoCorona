@@ -18,7 +18,7 @@ class Profile extends Component {
       tabBarIcon: <Icon icon="😎" />
     }
   }
-
+  
   handleLogout = () => {
     this.props.dispatch({
       type: 'REMOVE_USER',

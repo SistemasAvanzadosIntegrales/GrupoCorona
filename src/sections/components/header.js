@@ -6,9 +6,9 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import Search from '../../sections/containers/search';
-import Logo from '../../sections/containers/logo';
-import Menu from '../../sections/containers/menu';
+import Search from '../containers/search';
+import Logo from '../containers/logo';
+import Menu from '../containers/menu';
 
 function Header(props) {
   return (

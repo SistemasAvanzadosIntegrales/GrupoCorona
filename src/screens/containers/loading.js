@@ -5,17 +5,18 @@ import {
 import LoadingLayout from '../../sections/components/loading'
 import { connect } from 'react-redux';
 
-class Login extends Component {
+class Loading extends Component {
   
-  componentDidMount() {
-    // if(this.props.user) {
-      // this.props.navigation.navigate('App');
-    // } else {
-      this.props.navigation.navigate('Login');
-    // }
+  constructor(props){
+    super()
   }
   
   render() {
+
+    console.log(this)
+
+    this.props.navigation.navigate('Login');
+    
     return (
       <Fragment>
         <StatusBar
@@ -28,10 +29,4 @@ class Login extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    user: state.user
-  }
-}
-
-export default connect(mapStateToProps)(Login)
+export default connect(null)(Loading)

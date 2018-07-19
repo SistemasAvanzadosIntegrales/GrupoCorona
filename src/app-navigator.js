@@ -16,7 +16,6 @@ import Add from './screens/containers/add';
 import Profile from './screens/containers/profile';
 import Logout from './screens/containers/logout';
 import Lucky from './screens/containers/lucky';
-import Loading from './screens/containers/loading';
 import Login from './screens/containers/login';
 import Vehicles from './screens/containers/vehicles';
 import Accesorys from './screens/containers/accesorys';
@@ -200,7 +199,7 @@ const TabNavigator = createBottomTabNavigator(
 const VehicleDrawer = createDrawerNavigator(
   {
     Home: {
-      screen: Loading,
+      screen: Login,
       navigationOptions: {
         title: 'INICIO',
         drawerIcon: <Icon name="home" size={30} color="#4FD2D5" />
@@ -247,7 +246,7 @@ const VehicleDrawer = createDrawerNavigator(
     drawerWidth: 225,
     drawerBackgroundColor: '#303030',
     contentComponent: (props) => (
-      <DrawerComponent currentScreen={props.navigation.state.routeName} {...props} />
+      <DrawerComponent currentScreen={ props.navigation.state.routeName } { ...props } />
     ),
     contentOptions: {
       activeBackgroundColor: '#262626',
@@ -299,10 +298,9 @@ const SwitchNavigator = createSwitchNavigator(
   {
     App: Context,
     Login,
-    Loading,
   },
   {
-    initialRouteName: 'Loading',
+    initialRouteName: 'Login',
   }
 )
 

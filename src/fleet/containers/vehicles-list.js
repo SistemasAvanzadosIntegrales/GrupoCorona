@@ -9,26 +9,23 @@ import Vehicle from '../components/vehicle';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 
-function mapStateToProps(state) {
-  return {
-    list: state.videos.vehiclesList
-  }
-}
-
 class VehiclesList extends Component {
   
-  keyExtractor = item => item.id.toString()
-  renderEmtpy = () => <Empty text="No hay resultado de vehículos" />
+  constructor() {
+    super()
+  }
 
-  viewMovie = (item) => {
+  keyExtractor = (item) => item.id.toString()
+  renderEmtpy = () => <Empty text="No hay resultado de vehículos" />
+  viewVehicle = (item) => {
     
     this.props.dispatch({
-      type: 'SET_SELECTED_MOVIE',
+      type: 'SET_SELECTED_VEHICLE',
       payload: {
-        movie: item,
+        vehicle: item,
       }
     })
-
+    
     this.props.dispatch(
       NavigationActions.navigate({
         routeName: 'SubMain'
@@ -40,7 +37,7 @@ class VehiclesList extends Component {
     return (
       <Vehicle
         {...item}
-        onPress={ () => { this.viewMovie(item) } }
+        onPress={ () => { this.viewVehicle(item) } }
       />
     )
   }
@@ -50,12 +47,18 @@ class VehiclesList extends Component {
       <Layout>
         <FlatList
           keyExtractor={this.keyExtractor}
-          data={this.props.list}
+          data={this.props.vehicles.data}
           ListEmptyComponent={this.renderEmtpy}
           renderItem={this.renderItem}
         />
       </Layout>
     )
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    vehicles: state.vehicles.toJS()
   }
 }
 

@@ -1,112 +1,110 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   View,
   Text,
   TextInput,
   Button,
   StyleSheet,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   StatusBar,
-  NetInfo,
-} from 'react-native';
-import { connect } from 'react-redux';
-
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+  ImageBackground,
+} from 'react-native'
+import { connect } from 'react-redux'
+import { loginFetch } from '../../../actions'
+import Icon from 'react-native-vector-icons/dist/FontAwesome'
+import Loader from '../components/loader.js'
+import ErrorText from '../components/error.js'
 
 class Login extends Component {
 
-  constructor(props) {
-    super();
+  constructor() {
+    super()
 
     this.state = {
-      isUserOnline: false,
+      email: '',
+      password: '',
     }
   }
 
-  handleLogin = () => {
-    const token = 'ABCDEFGHIJK';
-    this.props.dispatch({
-      type: 'SET_USER',
-      payload: {
-        token,
-        email: 'roberto_ramirez@avansys.com.mx',
-        name: 'Roberto Ramírez',
-        id: '1',
-        status: '1',
-      }
-    })
-    
-    // this.props.navigation.navigate('Loading');
-    this.props.navigation.navigate('App');
+  validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email)
   }
 
-  getUserConnectionStatus = () => {
-    
-    NetInfo.isConnected.fetch().then(isUserOnline => {
-      this.state.isUserOnline = isUserOnline;
-      this.setState(this.state);
-    })
-
-    alert(isUserOnline);
+  handleSubmit = () => {
+    if ( this.validateEmail(this.state.email) && this.state.password != '' ) {
+      this.props.loginFetch(this.state)
+    } else {
+      alert('Email invalido o campos vacios')
+    }
   }
 
   render() {
+    
+    let error
+
+    if (this.props.auth.error) {
+      error = <ErrorText text="Usuario o contraseña incorrecto" />
+    }
+
+    if (this.props.auth.access_token) {
+      this.props.navigation.navigate('Home');
+    } else {
+      this.props.navigation.navigate('Login');
+    }
+
     return (
-      <SafeAreaView style={styles.container}>
+      <ImageBackground
+        source={require('../../../assets/login-fondo.png')}
+        style={ styles.container } >
         <StatusBar
-          backgroundColor="black"
           barStyle="light-content"
         />
-        <View style={styles.container_logo}>
+        { this.props.auth.isFetching && <Loader /> }
+        <View style={ styles.container_logo }>
           <Image
-              source={require('../../../assets/logo-corona.png')}
-              style={styles.logo}
+              source={ require('../../../assets/login-logo.png') }
+              style={ styles.logo }
             />
         </View>
-        <View style={styles.container_form}>
-          <View style={styles.container_form_input} >
-            <Icon style={styles.icon} name="envelope" size={20} color="#4FD2D5" />
+        <View style={ styles.container_form }>
+          <View style={ styles.container_form_input } >
+            <Icon style={ styles.icon } name="envelope" size={20} color="#4FD2D5" />
             <TextInput
-              style={styles.input}
+              style={ styles.input }
               placeholder="nombre@correo.com"
               placeholderTextColor="#333333"
-              maxLength={20}
+              maxLength={40}
               keyboardType="email-address"
               underlineColorAndroid='white'
+              onChangeText={ (email) => this.setState({email}) }
             />
           </View>
-          <View style={styles.container_form_input} >
-            <Icon style={styles.icon} name="unlock" size={20} color="#4FD2D5" />
+          <View style={ styles.container_form_input } >
+            <Icon style={ styles.icon } name="unlock" size={20} color="#4FD2D5" />
             <TextInput
-              style={styles.input}
+              style={ styles.input }
               placeholder="Contraseña"
               placeholderTextColor="#333333"
               secureTextEntry={true}
               maxLength={40}
               keyboardType="default"
               underlineColorAndroid='white'
+              onChangeText={ (password) => this.setState({password}) }
             />
           </View>
         </View>
-        <View style={styles.container_button}>
+        <View style={ styles.container_button }>
           <TouchableOpacity
-            onPress={this.handleLogin}
-            style={styles.button}
+            onPress={ this.handleSubmit }
+            style={ styles.button }
           >
-            <Text style={styles.buttonLabel}>Ingresar</Text>
+            <Text style={ styles.buttonLabel }>Ingresar</Text>
           </TouchableOpacity>
+          { error }
         </View>
-        <View style={styles.container_button}>
-          <TouchableOpacity
-            onPress={this.handleLogin}
-            style={styles.button}
-          >
-            <Text style={styles.buttonLabel}>¿Esta online?</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      </ImageBackground>
     )
   }
 }
@@ -166,4 +164,16 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(null)(Login)
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth.toJS()
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginFetch: (props) => dispatch(loginFetch(props.email, props.password))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
