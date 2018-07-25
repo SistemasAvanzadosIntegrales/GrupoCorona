@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   ImageBackground,
+  Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { loginFetch } from '../../../actions'
@@ -18,8 +19,8 @@ import ErrorText from '../components/error.js'
 
 class Login extends Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
       email: '',
@@ -36,7 +37,13 @@ class Login extends Component {
     if ( this.validateEmail(this.state.email) && this.state.password != '' ) {
       this.props.loginFetch(this.state)
     } else {
-      alert('Email invalido o campos vacios')
+      Alert.alert(
+        '¡Alerta!',
+        'Email invalido o campos vacios',
+        [
+          {text: 'Aceptar'},
+        ],
+      )
     }
   }
 
@@ -49,9 +56,9 @@ class Login extends Component {
     }
 
     if (this.props.auth.access_token) {
-      this.props.navigation.navigate('Home');
+      this.props.navigation.navigate('Home')
     } else {
-      this.props.navigation.navigate('Login');
+      this.props.navigation.navigate('Login')
     }
 
     return (

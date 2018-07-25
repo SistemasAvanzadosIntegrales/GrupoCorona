@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Text,
-  TextInput,
   StatusBar,
   SafeAreaView,
   View,
@@ -10,236 +9,114 @@ import {
   ScrollView,
   Button,
   TouchableOpacity,
-} from 'react-native';
-import { connect } from 'react-redux';
-import Header from '../../sections/components/headerNoSearch';
+  Alert,
+
+} from 'react-native'
+import { connect } from 'react-redux'
+import Header from '../../sections/components/header'
+import { documentUpdateFetch } from '../../../actions'
+import Loader from '../components/loader.js'
 
 class DocumentsDetail extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super()
+
     this.state = {
-      MarcaValue: '',
-      ModeloValue: '',
-      VersionValue: '',
-      SucursalValue: '',
-      AreaValue: '',
-      EstatusValue: '',
+      id              : '',
+      idDocument      : '',
+      document_type_id: '',
+      // file            : '',
+      status          : '',
     }
   }
 
-  handleCancel = () => {
-    this.props.navigation.navigate('Documents');
+  componentWillMount() {
+
+    this.setState({
+      id              : this.props.vehicles.selectedVehicle.id,
+      idDocument      : this.props.documents.selectedDocument.id,
+      document_type_id: this.props.documents.selectedDocument.document_type_id,
+      // file            : this.props.documents.selectedDocument.file,
+      status          : this.props.documents.selectedDocument.status,
+    })
   }
 
-  handleSuccess = () => {
-    this.props.navigation.navigate('Documents');
+  handleSuccess = async () => {
+
+    // if ( this.state.file             != '' && 
+    //      this.state.document_type_id != '' ) {
+    if ( this.state.document_type_id != '' ) {
+      this.props.documentUpdateFetch(this.props.auth, this.state)
+    } else {
+      Alert.alert(
+        '¡Alerta!',
+        'Campos obligatorios vacios',
+        [
+          {text: 'Aceptar'},
+        ],
+      )
+    }
   }
   
   render() {
+
+    if (this.props.documents.success) {
+      this.props.navigation.navigate('Login')
+    }
+
     return (
       <SafeAreaView>
         <StatusBar
           backgroundColor="#262626"
           barStyle="light-content"
         />
-        <Header title={'AGREGAR DOCUMENTO'} />
+        { this.props.documents.isFetching && <Loader /> }
+
+        <Header title={'GESTIONAR DOCUMENTO'} />
         <ScrollView contentContainerStyle={styles.container} >
           <View style={styles.container_form} >
-            <Text style={styles.text} >Número de vehículo <Text style={ {color: '#4FD2D5' } }>*</Text></Text>
-            <TextInput
-              style={styles.input}
-              placeholder="12345 - 6789 - 11"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Marca</Text>
+            <Text style={styles.text} >Tipo de documento<Text style={ {color: '#4FD2D5' } }>*</Text></Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.MarcaValue}
+                selectedValue={this.state.document_type_id}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {MarcaValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {document_type_id : itemValue} ) }
                 mode='dialog'
               >
-                <Picker.Item label="Seleccione una marca" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
+                <Picker.Item label="Seleccione el tipo de documento" value="" />
+                { this.props.catalogs.data.document.map( (value) => <Picker.Item key={value.id} label={ value.name } value={ value.id } /> )}
               </Picker>
             </View>
-
+            
             {/* --------------------------------------- */}
 
-            <Text style={styles.text} >Modelo</Text>
-            <View style={styles.container_picker} >
-              <Picker 
-                selectedValue={this.state.ModeloValue}
-                style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {ModeloValue : itemValue} ) }
-                mode='dialog'
-              >
-                <Picker.Item label="Seleccione un modelo" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
-              </Picker>
-            </View>
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Versión</Text>
-            <View style={styles.container_picker} >
-              <Picker 
-                selectedValue={this.state.VersionValue}
-                style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {VersionValue : itemValue} ) }
-                mode='dialog'
-              >
-                <Picker.Item label="Seleccione versión" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
-              </Picker>
-            </View>
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Número de serie <Text style={ {color: '#4FD2D5' } }>*</Text></Text>
-            <TextInput
-              style={styles.input}
-              placeholder="1234 - 56789 - 12345"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Año</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="2018"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Placas <Text style={ {color: '#4FD2D5' } }>*</Text></Text>
-            <TextInput
-              style={styles.input}
-              placeholder="AAA2222"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Kilometraje</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="44 567 km"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Color</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Turquesa"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Número de gps</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="1111 - 2222 - 22222"
-              placeholderTextColor="#D1D1D1"
-              maxLength={40}
-              keyboardType="default"
-              underlineColorAndroid='#D1D1D1'
-            />
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Sucursal</Text>
-            <View style={styles.container_picker} >
-              <Picker 
-                selectedValue={this.state.SucursalValue}
-                style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {SucursalValue : itemValue} ) }
-                mode='dialog'
-              >
-                <Picker.Item label="Seleccione sucursal" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
-              </Picker>
-            </View>
-
-            {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Área</Text>
-            <View style={styles.container_picker} >
-              <Picker 
-                selectedValue={this.state.AreaValue}
-                style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {AreaValue : itemValue} ) }
-                mode='dialog'
-              >
-                <Picker.Item label="Seleccione área" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
-              </Picker>
-            </View>
+            
 
             {/* --------------------------------------- */}
 
             <Text style={styles.text} >Estatus</Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.EstatusValue}
+                selectedValue={this.state.status}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {EstatusValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {status : itemValue} ) }
                 mode='dialog'
               >
-                <Picker.Item label="Activo" value="Activo" />
-                <Picker.Item label="Inactivo" value="Inactivo" />
+                <Picker.Item key="Activo" label="Activo" value="1" />
+                <Picker.Item key="Inactivo" label="Inactivo" value="0" />
               </Picker>
             </View>
 
-            <View style={styles.container_buttons} >
-              <View style={styles.container_button}  >
-                <TouchableOpacity
-                  onPress={this.handleCancel}
-                  style={styles.buttonCancel}
-                >
-                  <Text style={styles.buttonLabel}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.container_button}>
-                <TouchableOpacity
-                  onPress={this.handleSuccess}
-                  style={styles.buttonSuccess}
-                >
-                  <Text style={styles.buttonLabel}>Aceptar</Text>
-                </TouchableOpacity>
-              </View>
+            {/* --------------------------------------- */}
+
+            <View style={styles.container_button}>
+              <TouchableOpacity
+                onPress={this.handleSuccess}
+                style={styles.buttonSuccess}
+              >
+                <Text style={styles.buttonLabel}>Guardar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -268,13 +145,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingLeft: 5,
   },
-  input: {
-    height: 42,
-    color: '#262626',
-    fontSize: 16,
-    paddingLeft: 12,
-    paddingBottom: 15,
-  },
   container_picker: {
     borderBottomColor: '#CBCBCB',
     borderBottomWidth: 1,
@@ -285,23 +155,11 @@ const styles = StyleSheet.create({
     height: 37,
     color: '#262626',
   },
-  container_buttons: {
-    flex: 1,
-    flexDirection: 'row',
-    marginTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container_button: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  buttonCancel: {
-    backgroundColor: '#A3A3A3',
-    borderRadius: 5,
-    width: 125,
-    height: 30,
+    marginTop: 20,
   },
   buttonSuccess: {
     backgroundColor: '#4FD2D5',
@@ -318,4 +176,19 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(null)(DocumentsDetail);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth.toJS(),
+    vehicles: state.vehicles.toJS(),
+    catalogs: state.catalogs.toJS(),
+    documents: state.documents.toJS(),
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    documentUpdateFetch: (auth, props) => { dispatch(documentUpdateFetch(auth, props)) },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentsDetail)

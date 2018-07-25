@@ -10,9 +10,9 @@ import {
 let { width, height } = Dimensions.get('window');
 
 const Loader = props => (
-    <View style={ styles.overlay } >
-        <ActivityIndicator size='large'/>
-    </View>
+  <View style={ styles.overlay } >
+    <ActivityIndicator size='large'/>
+  </View>
 )
 
 const styles = StyleSheet.create({
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     width: width,
     height: height,
-    zIndex: 9999,
+    zIndex: 9999999,
   }
 })
 

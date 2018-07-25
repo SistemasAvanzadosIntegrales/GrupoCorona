@@ -3,72 +3,73 @@ import { fromJS } from 'immutable';
 const initialState = fromJS({
   isFetching: false,
   error: false,
-  success: false
+  sucess: false
 })
 
-const vehicles = (state = initialState, action) => {
+const expensives = (state = initialState, action) => {
 
   switch(action.type) {
-    case 'VEHICLE_REQUEST':
+    case 'EXPENSIVE_REQUEST':
       return state.merge({
         isFetching: true, 
         error: false,
-        success: false
+        sucess: false
       })
 
-    case 'VEHICLE_SUCCESS':
+    case 'EXPENSIVE_SUCCESS':
       return state.merge({
         data: action.payload.response,
         isFetching: false, 
         error: false,
-        success: false
+        sucess: true
       })
 
-    case 'VEHICLE_FAILURE':
+    case 'EXPENSIVE_FAILURE':
       return state.merge({
         isFetching: false, 
         error: true,
-        success: false
+        sucess: false
       })
 
-    case 'SET_SELECTED_VEHICLE':
+    case 'SET_SELECTED_EXPENSIVE':
       return state.merge({
         data: state.get('data'),
         isFetching: false, 
         error: false,
         success: false,
-        selectedVehicle: action.payload.vehicle
+        selectedExpensive: action.payload.expensive
       })
 
-    case 'VEHICLE_UPDATE_REQUEST':
+    case 'EXPENSIVE_UPDATE_REQUEST':
       return state.merge({
         isFetching: true, 
         error: false,
         success: false
       })
 
-    case 'VEHICLE_UPDATE_SUCCESS':
+    case 'EXPENSIVE_UPDATE_SUCCESS':
       return state.merge({
+        data: state.get('data'),
         isFetching: false, 
         error: false,
         success: true
       })
 
-    case 'VEHICLE_UPDATE_FAILURE':
+    case 'EXPENSIVE_UPDATE_FAILURE':
       return state.merge({
         isFetching: false, 
         error: true,
         success: false
       })
 
-    case 'VEHICLE_SEARCH_REQUEST':
+    case 'EXPENSIVE_SEARCH_REQUEST':
       return state.merge({
         isFetching: true, 
         error: false,
         success: false
       })
 
-    case 'VEHICLE_SEARCH_SUCCESS':
+    case 'EXPENSIVE_SEARCH_SUCCESS':
       return state.merge({
         data: action.payload.response, 
         isFetching: false, 
@@ -76,7 +77,7 @@ const vehicles = (state = initialState, action) => {
         success: true
       })
 
-    case 'VEHICLE_SEARCH_FAILURE':
+    case 'EXPENSIVE_SEARCH_FAILURE':
       return state.merge({
         isFetching: false, 
         error: true,
@@ -88,4 +89,4 @@ const vehicles = (state = initialState, action) => {
   }
 }
 
-export default vehicles
+export default expensives

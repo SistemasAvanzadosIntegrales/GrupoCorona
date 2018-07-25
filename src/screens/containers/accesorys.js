@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Text,
   TextInput,
@@ -11,89 +11,107 @@ import {
   Button,
   TouchableOpacity,
   CheckBox,
-} from 'react-native';
-import { connect } from 'react-redux';
-import Header from '../../sections/components/headerNoSearch';
-import { DrawerActions } from 'react-navigation';
+} from 'react-native'
+import { connect } from 'react-redux'
+import Header from '../../sections/components/header'
+import { accessoryUpdateFetch } from '../../../actions'
+import Loader from '../components/loader.js'
 
 class Accesorys extends Component {
 
   constructor(props) {
-    super(props);
-
-    this.state = {
-      check: false,
-      check1: true,
-      check2: false,
-    }
+    super(props)
+    
+    let data = {}
+    
+    this.props.catalogs.data.accessory.map((value) => {
+      let key = 'check-'+value.id
+      data[key] = false
+    })
+    
+    this.state = data
   }
 
-  checkBox () {
-    this.setState({
-      check: !this.state.check
-    })
-  }
+  componentWillMount() {
 
-  checkBox1 () {
-    this.setState({
-      check1: !this.state.check1
-    })
-  }
+    let data = {}
 
-  checkBox2 () {
-    this.setState({
-      check2: !this.state.check2
+    this.props.catalogs.data.accessory.map((value) => {
+      let key = 'check-'+value.id
+
+      this.props.accessorys.data.map((value1) => {
+        if (value.id == value1.accessory_type_id) {
+          data[key] = true
+        }
+      })
     })
+
+    this.setState(data)
   }
   
   handleCancel = () => {
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate('Home')
   }
 
   handleSuccess = () => {
-    this.props.navigation.navigate('Home');
+
+    let data = []
+
+    Object.keys(this.state).forEach( (value, key) => {
+      let request = value.slice(value.indexOf("-") + 1)
+
+      if ( this.state[value] ) {
+        data.push(request)
+      }
+    })
+
+    if ( data.length ) {
+      this.props.accessoryUpdateFetch(this.props.auth, this.props.vehicles.selectedVehicle.id, data)
+    }
+    else {
+      this.props.navigation.navigate('Login')
+    }
+  }
+
+  handleChangeValue = (id) => {
+    let state = {}
+    let key = 'check-'+id
+    state[key] = !this.state[key]
+
+    this.setState(state)
   }
   
   render() {
+
+    if (this.props.accessorys.success) {
+      this.props.navigation.navigate('Drawer')
+    }
+
     return (
       <SafeAreaView>
         <StatusBar
           backgroundColor="#262626"
           barStyle="light-content"
         />
+        { this.props.accessorys.isFetching && <Loader /> }
         <Header title={'ACCESORIOS'} />
         <ScrollView contentContainerStyle={styles.container} >
           <View style={styles.container_form} >
-            <View style={styles.container_checkbox} >
-              <Text style={styles.text} >Número de vehículo</Text>
-              <CheckBox
-                value={this.state.check}
-                onChange={ () => this.checkBox() }
-                containerStyle={{backgroundColor: '#4FD2D5'}}
-              />
-            </View>
+            
+            {
+              this.props.catalogs.data.accessory.map((value) => {
+                let key = 'check-'+value.id
 
-            {/* --------------------------------------- */}
-
-            <View style={styles.container_checkbox} >
-              <Text style={styles.text} >Marca</Text>
-              <CheckBox
-                value={this.state.check1}
-                onChange={ () => this.checkBox1() }
-                containerStyle={{backgroundColor: '#4FD2D5'}}
-              />
-            </View>
-
-            {/* --------------------------------------- */}
-
-            <View style={styles.container_checkbox} >
-              <Text style={styles.text} >Modelo</Text>
-              <CheckBox
-                value={this.state.check2}
-                onChange={ () => this.checkBox2() }
-                containerStyle={{backgroundColor: '#4FD2D5'}}
-              />
-            </View>
+                return (<View key={value.id} style={styles.container_checkbox} >
+                  <Text style={styles.text} >{ value.name }</Text>
+                  <CheckBox
+                    value={this.state[key]}
+                    onChange={ () => this.handleChangeValue(value.id) }
+                    containerStyle={ {backgroundColor: '#4FD2D5'} }
+                  />
+                </View>)
+              })
+            }
 
             <View style={styles.container_buttons} >
               <View style={styles.container_button}  >
@@ -181,4 +199,19 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(null)(Accesorys);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth.toJS(),
+    catalogs: state.catalogs.toJS(),
+    accessorys: state.accessorys.toJS(),
+    vehicles: state.vehicles.toJS(),
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    accessoryUpdateFetch: (auth, id, props) => { dispatch(accessoryUpdateFetch(auth, id, props)) },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Accesorys)

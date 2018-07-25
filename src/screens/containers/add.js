@@ -12,11 +12,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
-import Header from '../../sections/components/headerNoSearch';
+import Header from '../../sections/components/header';
 
 class Add extends Component {
 
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
       MarcaValue: '',

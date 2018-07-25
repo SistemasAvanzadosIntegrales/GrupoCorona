@@ -6,69 +6,69 @@ const initialState = fromJS({
   success: false
 })
 
-const vehicles = (state = initialState, action) => {
+const services = (state = initialState, action) => {
 
   switch(action.type) {
-    case 'VEHICLE_REQUEST':
+    case 'SERVICE_REQUEST':
       return state.merge({
         isFetching: true, 
         error: false,
         success: false
       })
 
-    case 'VEHICLE_SUCCESS':
+    case 'SERVICE_SUCCESS':
       return state.merge({
         data: action.payload.response,
         isFetching: false, 
         error: false,
-        success: false
+        success: true
       })
 
-    case 'VEHICLE_FAILURE':
+    case 'SERVICE_FAILURE':
       return state.merge({
         isFetching: false, 
         error: true,
         success: false
       })
 
-    case 'SET_SELECTED_VEHICLE':
+    case 'SET_SELECTED_SERVICE':
       return state.merge({
         data: state.get('data'),
         isFetching: false, 
         error: false,
         success: false,
-        selectedVehicle: action.payload.vehicle
+        selectedService: action.payload.service
       })
 
-    case 'VEHICLE_UPDATE_REQUEST':
+    case 'SERVICE_UPDATE_REQUEST':
       return state.merge({
         isFetching: true, 
         error: false,
         success: false
       })
 
-    case 'VEHICLE_UPDATE_SUCCESS':
+    case 'SERVICE_UPDATE_SUCCESS':
       return state.merge({
         isFetching: false, 
         error: false,
         success: true
       })
 
-    case 'VEHICLE_UPDATE_FAILURE':
+    case 'SERVICE_UPDATE_FAILURE':
       return state.merge({
         isFetching: false, 
         error: true,
         success: false
       })
 
-    case 'VEHICLE_SEARCH_REQUEST':
+    case 'SERVICE_SEARCH_REQUEST':
       return state.merge({
         isFetching: true, 
         error: false,
         success: false
       })
 
-    case 'VEHICLE_SEARCH_SUCCESS':
+    case 'SERVICE_SEARCH_SUCCESS':
       return state.merge({
         data: action.payload.response, 
         isFetching: false, 
@@ -76,7 +76,7 @@ const vehicles = (state = initialState, action) => {
         success: true
       })
 
-    case 'VEHICLE_SEARCH_FAILURE':
+    case 'SERVICE_SEARCH_FAILURE':
       return state.merge({
         isFetching: false, 
         error: true,
@@ -88,4 +88,4 @@ const vehicles = (state = initialState, action) => {
   }
 }
 
-export default vehicles
+export default services

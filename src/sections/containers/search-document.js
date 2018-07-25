@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import API from '../../../utils/api';
-import { vehicleSearchFetch, vehiclesFetch } from '../../../actions'
+import { documentSearchFetch, documentsFetch } from '../../../actions'
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -24,10 +24,10 @@ class Search extends Component {
   
   handleSubmit = async () => {
     if ( this.state.text != '' ) {
-      this.props.vehicleSearchFetch(this.props.auth, this.state.text)
+      this.props.documentSearchFetch(this.props.auth, this.state.text, this.props.vehicles.selectedVehicle.id)
     }
     else {
-      this.props.vehiclesFetch(this.props.auth)
+      this.props.documentsFetch(this.props.auth)
     }
   }
 
@@ -42,7 +42,7 @@ class Search extends Component {
             color="#BCBCBC" 
           />
           <TextInput
-            placeholder="Número de vehículo o placas"
+            placeholder="Nombre del archivo"
             autoCorrent={false}
             autoCapitalize="none"
             underlineColorAndroid="transparent"
@@ -94,8 +94,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    vehicleSearchFetch: (auth, props) => { dispatch(vehicleSearchFetch(auth, props)) },
-    vehiclesFetch: (auth) => { dispatch(vehiclesFetch(auth)) },
+    documentSearchFetch: (auth, text, id) => { dispatch(documentSearchFetch(auth, text, id)) },
+    documentsFetch: (auth) => { dispatch(documentsFetch(auth)) },
   }
 }
 

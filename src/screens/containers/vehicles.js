@@ -10,37 +10,92 @@ import {
   ScrollView,
   Button,
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { vehicleUpdateFetch } from '../../../actions'
-import Header from '../../sections/components/headerNoSearch'
+import { vehicleUpdateFetch, accessorysFetch, documentsFetch, expensivesFetch, servicesFetch } from '../../../actions'
+import Header from '../../sections/components/header'
+import Loader from '../components/loader.js'
 
 class Vehicles extends Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
-      MarcaValue: '',
-      ModeloValue: '',
-      VersionValue: '',
-      SucursalValue: '',
-      AreaValue: '',
-      EstatusValue: '',
+      id            : '',
+      folio         : '',
+      brand_id      : '',
+      model_type_id : '',
+      version       : '',
+      serial        : '',
+      year          : '',
+      plates        : '',
+      mileage       : '',
+      color         : '',
+      gps           : '',
+      office_id     : '',
+      area          : '',
+      status        : ''
     }
   }
 
+  componentWillMount() {
+    this.setState({
+      id            : this.props.vehicles.selectedVehicle.id,
+      folio         : this.props.vehicles.selectedVehicle.folio,
+      brand_id      : this.props.vehicles.selectedVehicle.brand.id,
+      model_type_id : this.props.vehicles.selectedVehicle.model_type.id,
+      version       : this.props.vehicles.selectedVehicle.version,
+      serial        : this.props.vehicles.selectedVehicle.serial,
+      year          : this.props.vehicles.selectedVehicle.year,
+      plates        : this.props.vehicles.selectedVehicle.plates,
+      mileage       : this.props.vehicles.selectedVehicle.mileage,
+      color         : this.props.vehicles.selectedVehicle.color,
+      gps           : this.props.vehicles.selectedVehicle.gps,
+      office_id     : this.props.vehicles.selectedVehicle.office.id,
+      area          : this.props.vehicles.selectedVehicle.area,
+      status        : this.props.vehicles.selectedVehicle.status
+    })
+  }
+
+  async componentDidMount() {
+    this.props.accessorysFetch(this.props.auth, this.props.vehicles.selectedVehicle.id)
+    this.props.documentsFetch(this.props.auth, this.props.vehicles.selectedVehicle.id)
+    this.props.expensivesFetch(this.props.auth, this.props.vehicles.selectedVehicle.id)
+    this.props.servicesFetch(this.props.auth, this.props.vehicles.selectedVehicle.id)
+  }
+  
   handleCancel = () => {
     this.props.navigation.navigate('Login')
   }
   
-  handleSuccess = () => {
-    this.props.navigation.navigate('Login')
+  handleSuccess = async () => {
+
+    if ( this.state.folio         != '' && 
+         this.state.brand_id      != '' &&
+         this.state.model_type_id != '' &&
+         this.state.serial        != '' &&
+         this.state.plates        != '' &&
+         this.state.office_id     != '' ) {
+
+      this.props.vehicleUpdateFetch(this.props.auth, this.state)
+    } else {
+      Alert.alert(
+        '¡Alerta!',
+        'Campos obligatorios vacios',
+        [
+          {text: 'Aceptar'},
+        ],
+      )
+    }
   }
   
   render() {
 
-    console.log(this.props)
+    if (this.props.vehicles.success) {
+      this.props.navigation.navigate('Login')
+    }
 
     return (
       <SafeAreaView>
@@ -48,6 +103,13 @@ class Vehicles extends Component {
           backgroundColor="#262626"
           barStyle="light-content"
         />
+        { this.props.vehicles.isFetching && <Loader /> }
+        { this.props.catalogs.isFetching && <Loader /> }
+        { this.props.services.isFetching && <Loader /> }
+        { this.props.expensives.isFetching && <Loader /> }
+        { this.props.documents.isFetching && <Loader /> }
+        { this.props.accessorys.isFetching && <Loader /> }
+
         <Header title={'GESTIÓN DE VEHÍCULO'} />
         <ScrollView contentContainerStyle={styles.container} >
           <View style={styles.container_form} >
@@ -59,54 +121,53 @@ class Vehicles extends Component {
               maxLength={40}
               keyboardType="default"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (folio) => this.setState( {folio} ) }
+              value={ this.state.folio }
             />
 
             {/* --------------------------------------- */}
-
-            <Text style={styles.text} >Marca</Text>
+            
+            <Text style={styles.text} >Marca <Text style={ {color: '#4FD2D5' } }>*</Text></Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.MarcaValue}
+                selectedValue={this.state.brand_id}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {MarcaValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {brand_id : itemValue} ) }
                 mode='dialog'
               >
                 <Picker.Item label="Seleccione una marca" value="" />
-                { this.props.catalogs.data.map( (value) => <Picker.Item label="{}" value="{}" /> )}
+                { this.props.catalogs.data.brand.map( (value) => <Picker.Item key={value.id} label={ value.name } value={ value.id } /> )}
               </Picker>
             </View>
 
             {/* --------------------------------------- */}
 
-            <Text style={styles.text} >Modelo</Text>
+            <Text style={styles.text} >Modelo <Text style={ {color: '#4FD2D5' } }>*</Text></Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.ModeloValue}
+                selectedValue={this.state.model_type_id}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {ModeloValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {model_type_id : itemValue} ) }
                 mode='dialog'
               >
                 <Picker.Item label="Seleccione un modelo" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
+                { this.props.catalogs.data.model.map( (value) => <Picker.Item key={value.id} label={ value.name } value={ value.id } /> )}
               </Picker>
             </View>
 
             {/* --------------------------------------- */}
 
             <Text style={styles.text} >Versión</Text>
-            <View style={styles.container_picker} >
-              <Picker 
-                selectedValue={this.state.VersionValue}
-                style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {VersionValue : itemValue} ) }
-                mode='dialog'
-              >
-                <Picker.Item label="Seleccione versión" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
-              </Picker>
-            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="TDI"
+              placeholderTextColor="#D1D1D1"
+              maxLength={40}
+              keyboardType="default"
+              underlineColorAndroid='#D1D1D1'
+              onChangeText={ (version) => this.setState( {version} ) }
+              value={ this.state.version }
+            />
 
             {/* --------------------------------------- */}
 
@@ -118,6 +179,8 @@ class Vehicles extends Component {
               maxLength={40}
               keyboardType="default"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (serial) => this.setState( {serial} ) }
+              value={ `${this.state.serial}` }
             />
 
             {/* --------------------------------------- */}
@@ -128,8 +191,10 @@ class Vehicles extends Component {
               placeholder="2018"
               placeholderTextColor="#D1D1D1"
               maxLength={40}
-              keyboardType="default"
+              keyboardType="numeric"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (year) => this.setState( {year} ) }
+              value={ `${this.state.year}` }
             />
 
             {/* --------------------------------------- */}
@@ -142,6 +207,8 @@ class Vehicles extends Component {
               maxLength={40}
               keyboardType="default"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (plates) => this.setState( {plates} ) }
+              value={ this.state.plates }
             />
 
             {/* --------------------------------------- */}
@@ -149,11 +216,13 @@ class Vehicles extends Component {
             <Text style={styles.text} >Kilometraje</Text>
             <TextInput
               style={styles.input}
-              placeholder="44 567 km"
+              placeholder="44567"
               placeholderTextColor="#D1D1D1"
               maxLength={40}
-              keyboardType="default"
+              keyboardType="numeric"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (mileage) => this.setState( {mileage} ) }
+              value={ `${this.state.mileage}` }
             />
 
             {/* --------------------------------------- */}
@@ -166,6 +235,8 @@ class Vehicles extends Component {
               maxLength={40}
               keyboardType="default"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (color) => this.setState( {color} ) }
+              value={ this.state.color }
             />
 
             {/* --------------------------------------- */}
@@ -178,21 +249,22 @@ class Vehicles extends Component {
               maxLength={40}
               keyboardType="default"
               underlineColorAndroid='#D1D1D1'
+              onChangeText={ (gps) => this.setState( {gps} ) }
+              value={ this.state.gps }
             />
 
             {/* --------------------------------------- */}
 
-            <Text style={styles.text} >Sucursal</Text>
+            <Text style={styles.text} >Sucursal <Text style={ {color: '#4FD2D5' } }>*</Text></Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.SucursalValue}
+                selectedValue={this.state.office_id}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {SucursalValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {office_id : itemValue} ) }
                 mode='dialog'
               >
                 <Picker.Item label="Seleccione sucursal" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
+                { this.props.catalogs.data.office.map( (value) => <Picker.Item key={value.id} label={ value.name } value={ value.id } /> )}
               </Picker>
             </View>
 
@@ -201,14 +273,18 @@ class Vehicles extends Component {
             <Text style={styles.text} >Área</Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.AreaValue}
+                selectedValue={this.state.area}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {AreaValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {area : itemValue} ) }
                 mode='dialog'
               >
                 <Picker.Item label="Seleccione área" value="" />
-                <Picker.Item label="option1" value="option1" />
-                <Picker.Item label="option2" value="option2" />
+                <Picker.Item key="Campo" label="Campo" value="Campo" />
+                <Picker.Item key="Logística" label="Logística" value="Logística" />
+                <Picker.Item key="Obras" label="Obras" value="Obras" />
+                <Picker.Item key="Producción" label="Producción" value="Producción" />
+                <Picker.Item key="Promotoria" label="Promotoria" value="Promotoria" />
+                <Picker.Item key="Ventas" label="Ventas" value="Ventas" />
               </Picker>
             </View>
 
@@ -217,13 +293,13 @@ class Vehicles extends Component {
             <Text style={styles.text} >Estatus</Text>
             <View style={styles.container_picker} >
               <Picker 
-                selectedValue={this.state.EstatusValue}
+                selectedValue={this.state.status}
                 style={styles.picker}
-                onValueChange={ (itemValue, itemIndex) => this.setState( {EstatusValue : itemValue} ) }
+                onValueChange={ (itemValue, itemIndex) => this.setState( {status : itemValue} ) }
                 mode='dialog'
               >
-                <Picker.Item label="Activo" value="Activo" />
-                <Picker.Item label="Inactivo" value="Inactivo" />
+                <Picker.Item key="Activo" label="Activo" value="1" />
+                <Picker.Item key="Inactivo" label="Inactivo" value="0" />
               </Picker>
             </View>
 
@@ -326,13 +402,21 @@ const mapStateToProps = (state) => {
   return {
     auth: state.auth.toJS(),
     vehicles: state.vehicles.toJS(),
-    catalogs: state.catalogs.toJS()
+    catalogs: state.catalogs.toJS(),
+    accessorys: state.accessorys.toJS(),
+    services: state.services.toJS(),
+    expensives: state.expensives.toJS(),
+    documents: state.documents.toJS(),
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    vehicleUpdateFetch: (auth, props) => { dispatch(vehicleUpdateFetch(auth, props)) }
+    vehicleUpdateFetch: (auth, props) => { dispatch(vehicleUpdateFetch(auth, props)) },
+    accessorysFetch: (auth, id) => { dispatch(accessorysFetch(auth, id)) },
+    documentsFetch: (auth, id) => { dispatch(documentsFetch(auth, id)) },
+    expensivesFetch: (auth, id) => { dispatch(expensivesFetch(auth, id)) },
+    servicesFetch: (auth, id) => { dispatch(servicesFetch(auth, id)) }
   }
 }
 

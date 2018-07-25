@@ -12,30 +12,34 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import { NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
-handleClick = () => {
-  console.log('hi');
-}
-
 function Document(props) {
+
+  let color = '';
+  if ( props.status ) {
+    color = "#8BCE46"
+  }
+  else {
+    color = "#DF0000"
+  }
+  
   return (
     <View style={styles.container}>
-      <View style={styles.left}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.subtitle}>{props.rating} | {props.year}</Text>
+      <View style={ styles.left }>
+        <Text style={ styles.title }>{ props.file }</Text>
+        <Text style={ styles.subtitle }>{ props.document_type.name }</Text>
       </View>
-
+      
       <View style={styles.right}>
         <Icon 
           name="circle" 
           size={20} 
-          color="#9BFF4D"
+          color={ color }
         />
 
         <Menu style={styles.menu}>
-          <MenuTrigger style={styles.menutrigger} > 
+          <MenuTrigger style={styles.menutrigger} >
             <Icon 
               name="ellipsis-v" 
               size={20} 
@@ -45,13 +49,13 @@ function Document(props) {
           <MenuOptions style={styles.menuoptions}>
             <MenuOption style={styles.menuoption} onSelect={ props.onPress } >
                 <Icon name="pencil" size={20} color="#A4A4A4" style={styles.icon} />
-                <Text>Editar</Text>  
+                <Text>Editar</Text>
             </MenuOption>
-            <MenuOption style={styles.menuoption} onSelect={ () => alert('Descargar') } >
+            <MenuOption style={styles.menuoption} onSelect={ props.onDownload } >
                 <Icon name="cloud-download" size={20} color="#A4A4A4" style={styles.icon} />
                 <Text>Descargar</Text>  
             </MenuOption>
-            <MenuOption style={styles.menuoption} onSelect={ () => alert('Eliminar') } >
+            <MenuOption style={styles.menuoption} onSelect={ props.onDestroy } >
                 <Icon name="trash" size={20} color="#A4A4A4" style={styles.icon} />
                 <Text>Eliminar</Text>  
             </MenuOption>

@@ -17,7 +17,7 @@ class Logo extends Component {
       })
     )
   }
-
+  
   render() {
     return (
       <TouchableOpacity onPress={this.handleClick} >

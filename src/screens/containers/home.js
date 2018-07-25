@@ -2,20 +2,21 @@ import React, { Component, Fragment } from 'react'
 import {
   Text,
   StatusBar,
-  NetInfo,
+  // NetInfo,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { vehiclesFetch, userFetch, catalogsFetch } from '../../../actions'
 import API from '../../../utils/api'
 import Header from '../../sections/components/header'
 import VehiclesList from '../../fleet/containers/vehicles-list'
-import Loader from '../components/loader.js'
-import ErrorText from '../components/error.js'
+import Loader from '../components/loader'
+import ErrorText from '../components/error'
+import Search from '../../sections/containers/search'
 
 class Home extends Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
   }
   
   // getUserConnectionStatus = () => {
@@ -30,8 +31,8 @@ class Home extends Component {
 
   async componentDidMount() {
     this.props.onUser(this.props.auth)
-    this.props.vehiclesFetch(this.props.auth)
     this.props.catalogsFetch(this.props.auth)
+    this.props.vehiclesFetch(this.props.auth)
   }
 
   render() {
@@ -48,8 +49,10 @@ class Home extends Component {
           backgroundColor="#262626"
           barStyle="light-content"
         />
-        { this.props.vehicles.isFetching && this.props.catalogs.isFetching && <Loader /> }
+        { this.props.catalogs.isFetching && <Loader /> }
+        { this.props.vehicles.isFetching && <Loader /> }
         <Header title={'GRUPO CORONA'} />
+        <Search />
         <VehiclesList />
         { error }
       </Fragment>

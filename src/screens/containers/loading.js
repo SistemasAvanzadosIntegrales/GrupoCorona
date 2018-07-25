@@ -8,13 +8,10 @@ import { connect } from 'react-redux';
 class Loading extends Component {
   
   constructor(props){
-    super()
+    super(props)
   }
   
   render() {
-
-    console.log(this)
-
     this.props.navigation.navigate('Login');
     
     return (

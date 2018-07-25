@@ -1,40 +1,51 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react'
 import {
   Text,
-  StatusBar
-} from 'react-native';
-import { connect } from 'react-redux';
-
-import API from '../../../utils/api';
-import Header from '../../sections/components/header';
+  StatusBar,
+  // NetInfo,
+} from 'react-native'
+import { connect } from 'react-redux'
+import API from '../../../utils/api'
+import Header from '../../sections/components/header'
 import ServicesList from '../../fleet/containers/services-list';
+import Loader from '../components/loader'
+import ErrorText from '../components/error'
+import Search from '../../sections/containers/search-service'
 
 class Services extends Component {
 
-  async componentDidMount() {
-
-    const vehiclesList = await API.getSuggestion(10);
-    
-    this.props.dispatch({
-      type: 'SET_SEGGESTION_LIST',
-      payload: {
-        vehiclesList
-      }
-    })
+  constructor(props) {
+    super(props)
   }
-
+  
   render() {
+
+    let error
+
+    if (this.props.services.error) {
+      error = <ErrorText text="Hubo un problema al obtener servicios" />
+    }
+
     return (
       <Fragment>
         <StatusBar
           backgroundColor="#262626"
           barStyle="light-content"
         />
-        <Header title={'GESTIÓN DE SERVICIOS'} />
+        { this.props.services.isFetching && <Loader /> }
+        <Header title={'SERVICIOS'} />
+        <Search />
         <ServicesList />
+        { error }
       </Fragment>
     )
   }
 }
 
-export default connect(null)(Services);
+const mapStateToProps = (state) => {
+  return {
+    services: state.services.toJS(),
+  }
+}
+
+export default connect(mapStateToProps)(Services)

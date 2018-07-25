@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
-import Header from '../../sections/components/headerNoSearch';
+import Header from '../../sections/components/header';
 
 class About extends Component {
 

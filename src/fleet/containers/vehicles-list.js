@@ -28,7 +28,7 @@ class VehiclesList extends Component {
     
     this.props.dispatch(
       NavigationActions.navigate({
-        routeName: 'SubMain'
+        routeName: 'Drawer'
       })
     )
   }
