@@ -1,13 +1,12 @@
-package com.grupocoronaapp;
+package com.avansys.grupocorona;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import com.rnfs.RNFSPackage;
-import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
-import com.brentvatne.react.ReactVideoPackage;
+import ui.fileselector.RNFileSelectorPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.rnfs.RNFSPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -28,11 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNFetchBlobPackage(),
+            new RNFileSelectorPackage(),
+            new VectorIconsPackage(),
             new RNFSPackage(),
-            new ReactNativeDocumentPicker(),
-            new ReactVideoPackage(),
-            new VectorIconsPackage()
+            new RNFetchBlobPackage()
       );
     }
 

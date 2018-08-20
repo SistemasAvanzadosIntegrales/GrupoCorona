@@ -3,7 +3,8 @@ import { fromJS } from 'immutable';
 const initialState = fromJS({
   isFetching: false,
   error: false,
-  success: false
+  success: false,
+  selectedService: false
 })
 
 const services = (state = initialState, action) => {
@@ -21,7 +22,8 @@ const services = (state = initialState, action) => {
         data: action.payload.response,
         isFetching: false, 
         error: false,
-        success: true
+        success: true,
+        selectedService: false
       })
 
     case 'SERVICE_FAILURE':

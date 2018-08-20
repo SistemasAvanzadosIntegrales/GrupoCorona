@@ -27,7 +27,7 @@ class Search extends Component {
       this.props.serviceSearchFetch(this.props.auth, this.state.text, this.props.vehicles.selectedVehicle.id)
     }
     else {
-      this.props.servicesFetch(this.props.auth)
+      this.props.servicesFetch(this.props.auth, this.props.vehicles.selectedVehicle.id)
     }
   }
 
@@ -95,7 +95,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     serviceSearchFetch: (auth, text, id) => { dispatch(serviceSearchFetch(auth, text, id)) },
-    servicesFetch: (auth) => { dispatch(servicesFetch(auth)) },
+    servicesFetch: (auth, id) => { dispatch(servicesFetch(auth, id)) },
   }
 }
 

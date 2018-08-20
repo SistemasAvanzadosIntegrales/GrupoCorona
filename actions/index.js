@@ -337,7 +337,6 @@ export const documentsFetch = (auth, id) => {
 
     API.getDocuments(auth, id)
     .then(json => {
-      console.log(json)
       if(json.hasOwnProperty('error'))
         dispatch(documentsFailure(json.message))
       else 

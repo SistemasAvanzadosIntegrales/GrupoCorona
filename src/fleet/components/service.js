@@ -1,22 +1,23 @@
-import React from 'react';
+import React from 'react'
 import {
   View,
   Image,
   Text,
   StyleSheet,
   TouchableOpacity
-} from 'react-native';
+} from 'react-native'
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
-} from 'react-native-popup-menu';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+} from 'react-native-popup-menu'
+import Icon from 'react-native-vector-icons/dist/FontAwesome'
 
 function Service(props) {
+  
+  let color = ''
 
-  let color = '';
   if ( props.status ) {
     color = "#8BCE46"
   }

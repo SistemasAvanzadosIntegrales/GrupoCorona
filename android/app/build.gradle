@@ -94,15 +94,16 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "com.grupocoronaapp"
+        applicationId "com.avansys.grupocorona"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -115,10 +116,21 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -136,12 +148,17 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url  "http://dl.bintray.com/lukaville/maven"
+    }
+}
+
 dependencies {
-    compile project(':react-native-fetch-blob')
     compile project(':react-native-fs')
-    compile project(':react-native-document-picker')
-    compile project(':react-native-video')
+    compile project(':react-native-file-selector')
     compile project(':react-native-vector-icons')
+    compile project(':react-native-fetch-blob')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
@@ -152,4 +169,15 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+subprojects {
+    afterEvaluate {project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion 26 // <-- match this to your project's compileSdkVersion
+                buildToolsVersion '26.0.3' // <-- match this to your project's buildToolsVersion
+            }
+        }
+    }
 }

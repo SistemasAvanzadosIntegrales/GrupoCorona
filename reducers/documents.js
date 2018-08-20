@@ -3,7 +3,8 @@ import { fromJS } from 'immutable';
 const initialState = fromJS({
   isFetching: false,
   error: false,
-  sucess: false
+  sucess: false,
+  selectedDocument: false
 })
 
 const documents = (state = initialState, action) => {
@@ -21,7 +22,8 @@ const documents = (state = initialState, action) => {
         data: action.payload.response,
         isFetching: false, 
         error: false,
-        sucess: true
+        sucess: true,
+        selectedDocument: false
       })
 
     case 'DOCUMENT_FAILURE':

@@ -43,6 +43,10 @@ class Home extends Component {
       error = <ErrorText text="Hubo un problema al obtener vehículos" />
     }
 
+    if (this.props.catalogs.error) {
+      error = <ErrorText text="Hubo un problema al obtener catálogos" />
+    }
+
     return (
       <Fragment>
         <StatusBar
@@ -61,6 +65,9 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => {
+
+  console.log(state.vehicles.toJS())
+  
   return {
     auth: state.auth.toJS(),
     vehicles: state.vehicles.toJS(),

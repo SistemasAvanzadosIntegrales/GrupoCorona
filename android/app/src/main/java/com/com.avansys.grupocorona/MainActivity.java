@@ -1,4 +1,4 @@
-package com.grupocoronaapp;
+package com.avansys.grupocorona;
 
 import com.facebook.react.ReactActivity;
 
