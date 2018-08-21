@@ -45,12 +45,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.grupocoronaapp",
+    package = "com.avansys.grupocorona",
 )
 
 android_resource(
     name = "res",
-    package = "com.grupocoronaapp",
+    package = "com.avansys.grupocorona",
     res = "src/main/res",
 )
 
